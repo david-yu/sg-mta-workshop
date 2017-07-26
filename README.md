@@ -31,7 +31,7 @@ In this lab we'll build a hybrid cluster, and then deploy both a Linux and Windo
 
 - When you encounter a phrase in between `<` and `>`  you are meant to substitute in a different value.
 
-	For instance if you see `<linux vm dns name>` you would actually type something like `hk-lin-01.eastus2.cloudapp.azure.com`
+	For instance if you see `<linux vm dns name>` you would actually type something like `sg-lin-01.eastus2.cloudapp.azure.com`
 
 - When you see the Linux penguin all the following instructions should be completed in your Linux VM
 
@@ -142,8 +142,8 @@ Our first step will be to create a two node swarm cluster. We'll make the Linux 
 	```
 	$ docker node ls
 	ID                            HOSTNAME            STATUS              AVAILABILITY        MANAGER STATUS
-	phud37l5prpy4bk76pfdkfofw     win-hk-20          Ready               Active
-	z42u37g25lrmcgbpyef9fd06r *   lin-hk-20          Ready               Active              Leader
+	phud37l5prpy4bk76pfdkfofw     win-sg-20          Ready               Active
+	z42u37g25lrmcgbpyef9fd06r *   lin-sg-20          Ready               Active              Leader
 	```
 
 3. Verify the operating system family for each node by using `docker inspect` on each of your nodes.
@@ -151,9 +151,9 @@ Our first step will be to create a two node swarm cluster. We'll make the Linux 
 	> **Note** The command below uses the hostnames show above, your hostnames will be different
 
 	```
-	$ docker node inspect win-hk-20 | grep OS
+	$ docker node inspect win-sg-20 | grep OS
 	                "OS": "windows"
-	$ docker node inspect lin-hk-20 | grep OS
+	$ docker node inspect lin-sg-20 | grep OS
 	                "OS": "linux"
 	```
 
@@ -161,13 +161,13 @@ Our first step will be to create a two node swarm cluster. We'll make the Linux 
 
 	> **Note** The command below uses the hostnames show above, your hostnames will be different
 
-	`$ docker inspect lin-hk-20`
+	`$ docker inspect lin-sg-20`
 
 	Scroll up in your terminal until you find the `Description` section. It should look similar to this:
 
 	```
 	"Description": {
-	            "Hostname": "lin-hk-20",
+	            "Hostname": "lin-sg-20",
 	            "Platform": {
 	                "Architecture": "x86_64",
 	                "OS": "linux"
@@ -322,7 +322,7 @@ Services are application building blocks (although in many cases an application 
 	```
 	$ docker service ps linux_tweet_app
 	ID                  NAME                IMAGE                                 NODE                DESIRED STATE       CURRENT STATE                ERROR               PORTS
-	z8fbzmkd92kv        linux_tweet_app.1   mikegcoleman/linux_tweet_app:latest   lin-hk-02          Running             Running about a minute ago
+	z8fbzmkd92kv        linux_tweet_app.1   mikegcoleman/linux_tweet_app:latest   lin-sg-02          Running             Running about a minute ago
 	```
 
 4. In a web browser on your laptop navigate to `http://<your linux node dns name>:8080`
@@ -472,7 +472,7 @@ We're going to run your application as a service on our swarm cluster. Because o
 	```
 	$ docker service ps windows_tweet_app
 	ID                  NAME                  IMAGE                                   NODE                DESIRED STATE       CURRENT STATE            ERROR               PORTS
-	iw4pj3pb1b2g        windows_tweet_app.1   mikegcoleman/windows_tweet_app:latest   win-hk-20          Running             Started 2 seconds ago
+	iw4pj3pb1b2g        windows_tweet_app.1   mikegcoleman/windows_tweet_app:latest   win-sg-20          Running             Started 2 seconds ago
 	```
 
 5. Visit the running site pointing a web browser on your laptop to `http:<windows vm dns name>:8088`
@@ -558,8 +558,8 @@ You may have used Docker Compose before to deploy multi-service applications, bu
 	```
 	$ docker stack ps atsea
 	ID                  NAME                IMAGE                     NODE                DESIRED STATE       CURRENT STATE           ERROR               PORTS
-	dflu6i3po6ur        atsea_appserver.1   sixeyed/atsea-app:mssql   lin-hk-21          Running             Running 7 minutes ago                       *:80->8080/tcp
-	wgaf4vxptafj        atsea_database.1    sixeyed/atsea-db:mssql    win-hk-21          Running             Running 6 minutes ago                       *:1433->1433/tcp
+	dflu6i3po6ur        atsea_appserver.1   sixeyed/atsea-app:mssql   lin-sg-21          Running             Running 7 minutes ago                       *:80->8080/tcp
+	wgaf4vxptafj        atsea_database.1    sixeyed/atsea-db:mssql    win-sg-21          Running             Running 6 minutes ago                       *:1433->1433/tcp
 	```
 
 	You can see from the output above the two services were deployed to the two different hosts, and are now up and Running
